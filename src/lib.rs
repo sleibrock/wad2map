@@ -1,3 +1,6 @@
+
+pub mod svg;
+
 #[cfg(test)]
 mod tests {
     #[test]
