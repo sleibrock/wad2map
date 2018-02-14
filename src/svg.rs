@@ -108,7 +108,6 @@ impl SVGObject for SVGRect {
 }
 
 
-
 // <circle cx="125" cy="125" r="75" fill="orange" />
 impl SVGCircle {
     pub fn new(cx: u64, cy: u64, r: u64) -> SVGCircle {
@@ -155,7 +154,7 @@ impl SVG {
         let mut buf : Vec<String> = Vec::new();
 
         let head = format!(
-            "<svg width=\"{}\" height=\"{}\" viewbox=\"0 0 {} {}\" xmlns=\"http://www.w3.org/2000/svg\">",
+            "<svg width=\"{}\" height=\"{}\" viewbox=\"0 0 {} {}\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">",
             self.width, self.height, self.width, self.height,
         );
         let tail = String::from("</svg>");
@@ -183,12 +182,10 @@ mod tests {
     #[test]
     fn test_create_svg() {
         use svg::*;
-
         
         let mut s = SVG::new(1024, 1024);
 
         let rect = SVGRect::new(0, 0, 1024, 1024, Color::White);
-
         let line = SVGLine::new(0, 0, 1024, 1024, 5, Color::Black);
         let line2 = SVGLine::new(1024, 0, 0, 1024, 10, Color::Black);
 
