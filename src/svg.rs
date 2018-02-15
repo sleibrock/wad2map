@@ -150,14 +150,12 @@ impl SVG {
 
     // convert an SVG object to file format
     pub fn to_file(&mut self, fname: &str) -> Result<u8, &str> {
-
-        let mut buf : Vec<String> = Vec::new();
-
         let head = format!(
             "<svg width=\"{}\" height=\"{}\" viewbox=\"0 0 {} {}\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">",
             self.width, self.height, self.width, self.height,
         );
         let tail = String::from("</svg>");
+        let mut buf : Vec<String> = Vec::new();
 
         buf.push(head);
         for obj in &self.objects {
@@ -166,17 +164,20 @@ impl SVG {
         buf.push(tail);
 
         // open the file for writing
-        let mut f = File::create(fname).expect("Failed to make file");
+        let mut f = match File::create(fname) {
+            Ok(new_file) => new_file,
+            _            => { return Err("Failed to make file"); },
+        };
 
         for stringthing in buf {
             f.write(stringthing.as_ref());
         }
-
         return Ok(0);
     }
 }
 
 
+// tests
 #[cfg(test)]
 mod tests {
     #[test]
@@ -185,8 +186,8 @@ mod tests {
         
         let mut s = SVG::new(1024, 1024);
 
-        let rect = SVGRect::new(0, 0, 1024, 1024, Color::White);
-        let line = SVGLine::new(0, 0, 1024, 1024, 5, Color::Black);
+        let rect  = SVGRect::new(0, 0, 1024, 1024, Color::White);
+        let line  = SVGLine::new(0, 0, 1024, 1024, 5, Color::Black);
         let line2 = SVGLine::new(1024, 0, 0, 1024, 10, Color::Black);
 
         s.add_object(Box::new(rect));
