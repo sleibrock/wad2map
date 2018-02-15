@@ -44,23 +44,24 @@ fn parse_wad(fname: &str) -> Result<Wad, &str> {
     let mut lumps : Vec<Lump> = Vec::new();
 
     // loop through the info table to create lumps 
-    let mut counter : usize = 0;
-    while counter < lump_data.len() {
+    let mut offset : usize = 0;
+    while offset < lump_data.len() {
 
         // slice the data into a packet 
-        let pkt = &lump_data[packet_range(counter, LUMP_WIDTH)];
+        let pkt = &lump_data[packet_range(offset, LUMP_WIDTH)];
 
         // add a new lump to the lump vector
         let l = Lump::new(&pkt);
 
+        // check if we are in a Hexen Wad or not
+        // Hexen has a unique lump called BEHAVIOR
         if l.name.starts_with("BEHAVIOR") {
             is_hexen = true;
         }
-        
         lumps.push(l);
         
         // bump the address by one packet width
-        counter = counter + LUMP_WIDTH
+        offset = offset + LUMP_WIDTH
     }
 
 
@@ -69,7 +70,7 @@ fn parse_wad(fname: &str) -> Result<Wad, &str> {
         return Err("Lumps collected does not match header");
     }
 
-    let wad = Wad::new(header, &lumps, &data[..], is_hexen);
+    let wad = Wad::new(fname, header, &lumps, &data[..], is_hexen);
     return Ok(wad);
 }
 

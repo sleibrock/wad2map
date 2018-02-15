@@ -22,14 +22,13 @@ pub enum Color {
 pub fn color_to_string(c: &Color) -> String {
     return match *c {
         Color::Red    =>    "red".to_owned(),
+        Color::None   =>   "none".to_owned(),
         Color::Blue   =>   "blue".to_owned(),
+        Color::Grey   =>   "grey".to_owned(),
         Color::Green  =>  "green".to_owned(),
-        Color::Yellow => "yellow".to_owned(),
         Color::Black  =>  "black".to_owned(),
         Color::White  =>  "white".to_owned(),
-        Color::Grey   =>   "grey".to_owned(),
-        Color::None   =>   "none".to_owned(),
-        _             =>   "none".to_owned(),
+        Color::Yellow => "yellow".to_owned(),
     }
 }
 
@@ -71,9 +70,7 @@ pub struct SVGCircle {
 
 impl SVGLine {
     pub fn new(x1: u64, y1: u64, x2: u64, y2: u64, w: u64, color: Color) -> SVGLine {
-        SVGLine{
-            x1: x1, y1: y1, x2: x2, y2: y2, stroke: w, color: color,
-        }
+        SVGLine{x1: x1, y1: y1, x2: x2, y2: y2, stroke: w, color: color,}
     }
 }
 
@@ -92,9 +89,7 @@ impl SVGObject for SVGLine {
 // <rect x="25" y="25" width="200" height="200" fill="lime" stroke-width="4" stroke="pink" />
 impl SVGRect {
     pub fn new(x: u64, y: u64, w: u64, h: u64, fill: Color) -> SVGRect {
-        SVGRect{
-            x: x, y: y, w: w, h: h, fill: fill,
-        }
+        SVGRect{x: x, y: y, w: w, h: h, fill: fill,}
     }
 }
 
@@ -111,9 +106,7 @@ impl SVGObject for SVGRect {
 // <circle cx="125" cy="125" r="75" fill="orange" />
 impl SVGCircle {
     pub fn new(cx: u64, cy: u64, r: u64) -> SVGCircle {
-        SVGCircle{
-            cx: cx, cy: cy, radius: r,
-        }
+        SVGCircle{cx: cx, cy: cy, radius: r,}
     }
 }
 
