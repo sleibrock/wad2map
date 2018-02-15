@@ -1,7 +1,5 @@
-// A Wad2Map test program
+// The Main Wad2map program file
 extern crate wad2map;
-
-// all numbers are in Little Endian format
 
 use std::env;
 use std::process::exit;
@@ -26,7 +24,6 @@ fn parse_wad(fname: &str) -> Result<Wad, &str> {
 
     println!("Opened file {}", fname);
     println!("Bytes read: {}", all_bytes.len());
-
 
     // craft a new WAD header struct with 12 bytes
     let header = WadHeader::new(&all_bytes[0..HEADER_WIDTH]);
@@ -61,13 +58,13 @@ fn parse_wad(fname: &str) -> Result<Wad, &str> {
         lumps.push(l);
         
         // bump the address by one packet width
-        offset = offset + LUMP_WIDTH
+        offset += LUMP_WIDTH;
     }
 
 
     println!("Total lumps gathered: {}", lumps.len()); 
     if lumps.len() != header.numlumps {
-        return Err("Lumps collected does not match header");
+        return Err("Lump count does not match header");
     }
 
     let wad = Wad::new(fname, header, &lumps, &data[..], is_hexen);

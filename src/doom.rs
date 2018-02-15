@@ -122,6 +122,7 @@ impl Lump {
             panic!(format!("Lump not given {} bytes", LUMP_WIDTH));
         }
 
+        // Check if the 
         let mut is_level : bool = false;
         if dat[8] == 69 && dat[10] == 77 {
             is_level = true;
@@ -199,6 +200,7 @@ impl Level {
         let mut vertices : Vec<Vertex>  = Vec::new();
         let mut linedefs : Vec<LineDef> = Vec::new();
 
+        // determine the width we will be using for LINEDEF scanning
         let mut offset : usize = 0;
         let ld_width : usize = match is_hexen {
             true => HEXEN_LINEDEF_WIDTH,
