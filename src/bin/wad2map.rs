@@ -7,9 +7,10 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::str;
 
-use wad2map::svg::*;
 use wad2map::utils::*;
-use wad2map::doom::*;
+use wad2map::doom::wad::*;
+use wad2map::doom::lump::*;
+use wad2map::mapmaker::*;
 
 
 // Parse a wad file into a Wad struct
@@ -82,7 +83,16 @@ fn main() {
     }
 
     for arg in arg_iter {
-        parse_wad(format!("{}", arg).as_str());
+        let fname = format!("{}", arg).to_owned();
+        
+        let wad = match parse_wad(&fname) {
+            Ok(new_wad) => new_wad,
+            _ => { panic!("HELP"); }
+        };
+
+        // take all the levels from the wad
+        // and make some SVG maps
+        make_maps_from_wad(&fname, &wad);
     }
 
     exit(0);
