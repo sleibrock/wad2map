@@ -7,8 +7,8 @@ use doom::constants::{DOOM_LINEDEF_WIDTH, HEXEN_LINEDEF_WIDTH};
 pub struct LineDef {
     pub start:      u16,
     pub end:        u16,
-    pub right:      u16,
-    pub left:       u16,
+    pub right:      i16,
+    pub left:       i16,
     pub flags:      u16,
     pub tag:        u16,
     pub stype:      u16,
@@ -28,8 +28,8 @@ impl LineDef {
             LineDef{
                 start: u8_to_u16(dat[0], dat[1]),
                 end:   u8_to_u16(dat[2], dat[3]),
-                right: u8_to_u16(dat[12], dat[13]),
-                left:  u8_to_u16(dat[14], dat[15]),
+                right: u8_to_i16(dat[12], dat[13]),
+                left:  u8_to_i16(dat[14], dat[15]),
                 flags: u8_to_u16(dat[4], dat[5]), 
                 stype: 0,
                 tag:   0,
@@ -43,21 +43,20 @@ impl LineDef {
             LineDef{
                 start: u8_to_u16(dat[0], dat[1]),
                 end:   u8_to_u16(dat[2], dat[3]),
-                right: u8_to_u16(dat[10], dat[11]),
-                left:  u8_to_u16(dat[12], dat[13]),
+                left:  u8_to_i16(dat[10], dat[11]),
+                right: u8_to_i16(dat[12], dat[13]),
                 flags: u8_to_u16(dat[4], dat[5]),
                 stype: u8_to_u16(dat[6], dat[7]),
                 tag:   u8_to_u16(dat[8], dat[9]),
-                args: [0, 0, 0, 0, 0, 0],
+                args:  [0, 0, 0, 0, 0, 0],
             }
 
         } 
     }
 
     pub fn is_one_sided(&self) -> bool {
-        self.left == 65535 || self.right == 65535
+        self.left == -1 || self.right == -1 
     }
-
 }
 
 // end

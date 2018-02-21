@@ -91,18 +91,11 @@ fn main() {
             _ => { panic!("HELP"); }
         };
 
-        if wad.levels.len() > 0 {
-            println!("Level: {}", wad.levels[0].name);
-
-            println!("Vertices count: {}", &wad.levels[0].vertices.len());
-            for (i, vert) in wad.levels[0].vertices.iter().enumerate() {
-                vert.print();
-            }
-        }
+        //wad.print_info();
 
         // take all the levels from the wad
         // and make some SVG maps
-        //make_maps_from_wad(&fname, &wad);
+        make_maps_from_wad(&fname, &wad);
     }
 
     exit(0);

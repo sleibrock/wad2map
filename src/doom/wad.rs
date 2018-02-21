@@ -117,6 +117,11 @@ impl Wad {
         }
     }
 
+    pub fn print_info(&self) {
+        println!("Wad name: {}", self.name);
+        println!("Level count: {}", self.levels.len());
+    }
+
     pub fn print_level_info(&self) {
         for x in &self.levels {
             x.print();

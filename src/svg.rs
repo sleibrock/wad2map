@@ -13,6 +13,8 @@
 
 use std::fs::File;
 use std::io::Write;
+use std::error::Error;
+
 
 // utility for creating very basic colors for SVG writing
 pub enum Color {
@@ -37,8 +39,10 @@ pub trait SVGObject {
 }
 
 pub struct SVG {
-    pub   width:                 u64,
-    pub  height:                 u64,
+    pub width:                   u64,
+    pub height:                  u64,
+    pub view_width:              u64,
+    pub view_height:             u64,
     pub objects: Vec<Box<SVGObject>>,
 }
 
@@ -125,10 +129,12 @@ impl SVGObject for SVGCircle {
 impl SVG {
 
     // craft a new SVG and set the width and height at creation time
-    pub fn new(w: u64, h: u64) -> SVG {
+    pub fn new(w: u64, h: u64, vx: u64, vy: u64) -> SVG {
         return SVG{
             width:            w,
             height:           h,
+            view_width: vx,
+            view_height: vy,
             objects: Vec::new(),
         }
     }
@@ -144,8 +150,8 @@ impl SVG {
     // convert an SVG object to file format
     pub fn to_file(&mut self, fname: &str) -> Result<u8, &str> {
         let head = format!(
-            "<svg width=\"{}\" height=\"{}\" viewbox=\"0 0 {} {}\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">",
-            self.width, self.height, self.width, self.height,
+            "<svg width=\"{}\" height=\"{}\" viewBox=\"0 0 {} {}\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">",
+            self.width, self.height, self.view_width, self.view_height,
         );
         let tail = String::from("</svg>");
         let mut buf : Vec<String> = Vec::new();
@@ -159,7 +165,7 @@ impl SVG {
         // open the file for writing
         let mut f = match File::create(fname) {
             Ok(new_file) => new_file,
-            _            => { return Err("Failed to make file"); },
+            Err(why)     => panic!("Couldn't create '{:?}': {}", fname, why.description()),
         };
 
         for stringthing in buf {
@@ -177,7 +183,7 @@ mod tests {
     fn test_create_svg() {
         use svg::*;
         
-        let mut s = SVG::new(1024, 1024);
+        let mut s = SVG::new(1024, 1024, 1024, 1024);
 
         let rect  = SVGRect::new(0, 0, 1024, 1024, Color::White);
         let line  = SVGLine::new(0, 0, 1024, 1024, 5, Color::Black);

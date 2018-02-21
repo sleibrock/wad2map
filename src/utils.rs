@@ -1,7 +1,9 @@
-// utility functions
+// utils.rs
 
 use std::ops::Range;
 
+/// This function is used to create a range for slicing up Lump data
+/// It takes a start position and a width and creates a range of (x .. (x + w))
 pub fn packet_range(start: usize, width: usize) -> Range<usize> {
     (start .. (start + width))
 }
@@ -26,12 +28,14 @@ pub fn u8_to_i16(a: u8, b: u8) -> i16 {
 }
 
 
+// testing section for byte conversions go here
 #[cfg(test)]
 mod tests {
 
     use utils::*;
 
     const DATA1 : [u8; 2] = [0, 0];
+    const DATA2 : [u8; 2] = [255, 255];
 
     #[test]
     fn test_u16_to_i16() {
@@ -44,3 +48,5 @@ mod tests {
     }
 
 }
+
+// end
