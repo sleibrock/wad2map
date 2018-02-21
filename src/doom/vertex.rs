@@ -1,6 +1,7 @@
 use utils::*;
 
-pub const VERTEX_WIDTH : usize = 4;
+use doom::constants::{VERTEX_WIDTH};
+
 
 pub struct Vertex {
     pub x: i16,

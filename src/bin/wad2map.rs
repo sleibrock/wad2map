@@ -11,6 +11,7 @@ use wad2map::utils::*;
 use wad2map::doom::wad::*;
 use wad2map::doom::lump::*;
 use wad2map::mapmaker::*;
+use wad2map::doom::constants::*;
 
 
 // Parse a wad file into a Wad struct
@@ -90,9 +91,18 @@ fn main() {
             _ => { panic!("HELP"); }
         };
 
+        if wad.levels.len() > 0 {
+            println!("Level: {}", wad.levels[0].name);
+
+            println!("Vertices count: {}", &wad.levels[0].vertices.len());
+            for (i, vert) in wad.levels[0].vertices.iter().enumerate() {
+                vert.print();
+            }
+        }
+
         // take all the levels from the wad
         // and make some SVG maps
-        make_maps_from_wad(&fname, &wad);
+        //make_maps_from_wad(&fname, &wad);
     }
 
     exit(0);

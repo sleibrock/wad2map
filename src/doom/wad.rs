@@ -1,19 +1,11 @@
 use std::ops::{RangeFrom, Range};
 
+use utils::*;
+use doom::constants::{HEADER_WIDTH, IWAD_NUMBER, PWAD_NUMBER};
 use doom::vertex::*;
 use doom::linedef::*;
 use doom::lump::*;
 use doom::level::*;
-
-use utils::*;
-
-
-pub const HEADER_WIDTH : usize = 12;
-
-/// These numbers are used in determining the type of Wad that we are given.
-/// If a file does not match these two numbers, then it is not a proper Wad
-pub const IWAD_NUMBER : u32 = 1145132873;
-pub const PWAD_NUMBER : u32 = 1145132880;
 
 
 pub struct WadHeader {
@@ -43,8 +35,8 @@ impl WadHeader {
         }
         WadHeader{
             wadtype:  u8_to_u32(dat[0], dat[1],  dat[2],  dat[3]),
-            numlumps: u8_to_u32(dat[4], dat[5],  dat[6],  dat[7]) as usize,
-            lumpaddr: u8_to_u32(dat[8], dat[9], dat[10], dat[11]) as usize,
+            numlumps: u8_to_usize(dat[4], dat[5],  dat[6],  dat[7]),
+            lumpaddr: u8_to_usize(dat[8], dat[9], dat[10], dat[11]),
         }
     }
 

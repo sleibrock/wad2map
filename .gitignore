@@ -5,4 +5,5 @@ Cargo.lock
 
 
 *.wad
+*.map
 *.svg

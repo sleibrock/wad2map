@@ -1,7 +1,7 @@
 use utils::*;
 use std::ops::Range;
+use doom::constants::{LUMP_WIDTH, HEADER_WIDTH};
 
-pub const LUMP_WIDTH : usize = 16;
 
 pub struct Lump {
     pub posn:      usize,
@@ -29,8 +29,8 @@ impl Lump {
         // is_level is checking if a name is (ExMx|MAPxx)
         Lump{
             is_level: (dat[8]==69&&dat[10]==77)||(dat[8]==77&&dat[9]==65&&dat[10]==80),
-            posn:     u8_to_u32(dat[0], dat[1], dat[2], dat[3]) as usize,
-            size:     u8_to_u32(dat[4], dat[5], dat[6], dat[7]) as usize,
+            posn:     u8_to_usize(dat[0], dat[1], dat[2], dat[3]),
+            size:     u8_to_usize(dat[4], dat[5], dat[6], dat[7]),
             name:     String::from_utf8_lossy(&dat[8..16]).to_string(),
         }
     }
@@ -40,7 +40,10 @@ impl Lump {
     }
 
     // return the range that the lump lies in
+    // when we slice data, the original addresses do not take into account
+    // the fact that the header was stripped from the data pool
+    // so the header width should be subtracted from it
     pub fn range(&self) -> Range<usize> {
-        (self.posn .. (self.posn + self.size))
+        ((self.posn - HEADER_WIDTH) .. ((self.posn - HEADER_WIDTH) + self.size))
     }
 }

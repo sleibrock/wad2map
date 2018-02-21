@@ -2,6 +2,7 @@ use doom::linedef::*;
 use doom::vertex::*;
 
 use utils::*;
+use doom::constants::{VERTEX_WIDTH, DOOM_LINEDEF_WIDTH, HEXEN_LINEDEF_WIDTH};
 
 pub struct Level {
     pub name:           String,
@@ -20,7 +21,7 @@ impl Level {
         // determine the width we will be using for LINEDEF scanning
         let mut offset : usize = 0;
         let ld_width : usize = match is_hexen {
-            true => HEXEN_LINEDEF_WIDTH,
+            true  => HEXEN_LINEDEF_WIDTH,
             false => DOOM_LINEDEF_WIDTH,
         };
 

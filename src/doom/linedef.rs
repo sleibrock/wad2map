@@ -1,8 +1,8 @@
+// linedef.rs
+
 use utils::*;
 
-pub const  DOOM_LINEDEF_WIDTH  : usize = 14;
-pub const  HEXEN_LINEDEF_WIDTH : usize = 16;
-
+use doom::constants::{DOOM_LINEDEF_WIDTH, HEXEN_LINEDEF_WIDTH};
 
 pub struct LineDef {
     pub start:      u16,
@@ -59,3 +59,5 @@ impl LineDef {
     }
 
 }
+
+// end
