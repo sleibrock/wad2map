@@ -1,12 +1,12 @@
-// logic behind converting a Wad struct to a series of SVG file outputs
+// mapmaker.rs
+// TODO: make the drawing algorithm a lot better
+
 
 use std::fs::create_dir;
-use std::path::Path;
 
 use svg::*;
 use doom::level::*;
 use doom::wad::*;
-use doom::lump::*;
 
 
 pub fn dir_name(dname: &str) -> String {

@@ -2,10 +2,8 @@ use std::ops::{RangeFrom, Range};
 
 use utils::*;
 use doom::constants::{HEADER_WIDTH, IWAD_NUMBER, PWAD_NUMBER};
-use doom::vertex::*;
-use doom::linedef::*;
-use doom::lump::*;
-use doom::level::*;
+use doom::lump::Lump;
+use doom::level::Level;
 
 
 pub struct WadHeader {

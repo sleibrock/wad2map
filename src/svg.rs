@@ -1,4 +1,5 @@
-// SVG file API
+// svg.rs
+
 // The SVG struct holds shapes and can render to file
 //
 // Example file:
@@ -169,7 +170,10 @@ impl SVG {
         };
 
         for stringthing in buf {
-            f.write(stringthing.as_ref());
+            match f.write(stringthing.as_ref()) {
+                Ok(_) => {},
+                _     => panic!("Failed to write bytes"),
+            };
         }
         return Ok(0);
     }
