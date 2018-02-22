@@ -27,8 +27,17 @@ pub fn make_path_str(dir: &str, lname: &str) -> String {
 }
 
 
-pub fn normalize(a: i32, b: i32, c: i32) -> u64 {
-    (a+b+c) as u64
+pub fn normalize(a: i32, b: i32, c: i32) -> i32 {
+    (a+b+c)
+}
+
+pub fn flip(v: i32, m: i32) -> i32 {
+    let delta = (m-v).abs();
+    if v < m {
+        return v + (2*delta);
+    } else {
+        return v - (2*delta);
+    }
 }
 
 
@@ -57,34 +66,29 @@ pub fn level_to_svg(lev: &Level) -> SVG {
     let shift_x : i32 = 0 - min_x as i32;
     let shift_y : i32 = 0 - min_y as i32;
 
+    // padding from the edge of the image
+    let padding : i32 = 10;
+
 
     // create a canvas and start adding objects to it
-    let view_box_x = normalize(max_x as i32, shift_x, 10);
-    let view_box_y = normalize(max_y as i32, shift_y, 10);
+    let view_box_x = normalize(max_x as i32, shift_x, 10) as u64;
+    let view_box_y = normalize(max_y as i32, shift_y, 10) as u64;
 
-    let aspect_ratio_bool = view_box_x > view_box_y;
-    let canvas_x : u64 = match aspect_ratio_bool {
-        true => 1024,
-        _    => (1024.0 * (view_box_y as f64 / view_box_x as f64)) as u64,
-    }; 
+    let mut buf = SVG::new(1024, 768, view_box_x, view_box_y);
 
-    let canvas_y : u64 = match aspect_ratio_bool {
-        true => (1024.0 * (view_box_x as f64 / view_box_y as f64)) as u64,
-        _    => 1024,
-    };
-
-    let mut buf = SVG::new(canvas_x, canvas_y, view_box_x, view_box_y);
+    let mx = view_box_x / 2;
+    let my = view_box_y / 2;
 
     for linedef in &lev.linedefs {
         let a = &lev.vertices[linedef.start as usize];
         let b = &lev.vertices[linedef.end as usize];
 
-        let ax = normalize(a.x as i32, shift_x, 0);
-        let ay = normalize(a.y as i32, shift_y, 0);
-        let bx = normalize(b.x as i32, shift_x, 0);
-        let by = normalize(b.y as i32, shift_y, 0);
+        let ax = normalize(a.x as i32, shift_x, 0) as i32;
+        let ay = flip(normalize(a.y as i32, shift_y, 0), my as i32);
+        let bx = normalize(b.x as i32, shift_x, 0) as i32;
+        let by = flip(normalize(b.y as i32, shift_y, 0), my as i32);
         let l = SVGLine::new(
-            ax, ay, bx, by,
+            ax as u64, ay as u64, bx as u64, by as u64,
             5,
             Color::Black
         );

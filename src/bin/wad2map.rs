@@ -23,11 +23,14 @@ fn main() {
         let fname = format!("{}", arg).to_owned();
         
         let wad = match parse_wad(&fname) {
-            Ok(new_wad) => new_wad,
-            _ => { panic!("HELP"); }
+            Ok(new_wad) => Some(new_wad),
+            _ => None,
         };
 
-        make_maps_from_wad(&fname, &wad);
+        let res = match wad {
+            Some(w) => make_maps_from_wad(&fname, &w),
+            _       => 2,
+        };
     }
 
     exit(0);
