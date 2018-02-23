@@ -27,7 +27,7 @@ fn main() {
             _ => None,
         };
 
-        let res = match wad {
+        let _ = match wad {
             Some(w) => make_maps_from_wad(&fname, &w),
             _       => 2,
         };
