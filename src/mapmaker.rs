@@ -29,13 +29,14 @@ pub fn make_path_str(dir: &str, lname: &str) -> String {
 }
 
 
-// flip a value around a middle point
-pub fn flip(v: i32, m: i32) -> i32 {
-    let delta = (m-v).abs();
-    match v < m {
-        true  => v + (2*delta),
-        false => v - (2*delta),
+// flip a value in a certain axis
+// if the axis is set to zero, just return the initial value
+pub fn flatten(v: u64, m: u64) -> u64 {
+    if m == 0 {
+        return v;
     }
+    let d = m - v;
+    return d;
 }
 
 
@@ -68,15 +69,20 @@ pub fn level_to_svg(lev: &Level) -> SVG {
     }
 
     // determine the shift offset to keep everything in 0..65535 range
-    let shift_x : i32 = 0 - min_x as i32;
-    let shift_y : i32 = 0 - min_y as i32;
+    let shift_x = 0 - min_x as i32;
+    let shift_y = 0 - min_y as i32;
 
     // padding from the edge of the image
     let padding : u64 = 50;
 
-    // viewbox numbers (total domain of all vertices [0..65535])
-    let vx = (max_x as i32) + shift_x + (2*padding as i32);
-    let vy = (max_y as i32) + shift_y + (2*padding as i32);
+
+    // numbers that define the max X and Y ranges
+    let mx = (max_x as i32) + shift_x;
+    let my = (max_y as i32) + shift_y;
+
+    // viewbox numbers that include the padding for the image
+    let vx = mx + (2*padding as i32);
+    let vy = my + (2*padding as i32);
 
     // calculate the image canvas size by using the aspect ratio of the viewbox numbers
     let base_canvas_size : f64 = 1024.0;
@@ -95,36 +101,32 @@ pub fn level_to_svg(lev: &Level) -> SVG {
     let mut buf = SVG::new(cx, cy, vx as u64, vy as u64);
     buf.add_object(Box::new(SVGRect::new(0, 0, vx as u64, vy as u64, Color::White)));
 
-    //let mx = ((max_x as i32) + shift_x) / 2;
-    let my = ((max_y as i32) + shift_y) / 2;
-
     for linedef in &lev.linedefs {
         let a = &lev.vertices[linedef.start as usize];
         let b = &lev.vertices[linedef.end   as usize];
 
-        let ax = (a.x as i32) + shift_x; let ay = (a.y as i32) + shift_y;
-        let bx = (b.x as i32) + shift_x; let by = (b.y as i32) + shift_y;
+        let ax = ((a.x as i32) + shift_x) as u64;
+        let ay = ((a.y as i32) + shift_y) as u64;
+        let bx = ((b.x as i32) + shift_x) as u64;
+        let by = ((b.y as i32) + shift_y) as u64;
 
-        // y values need to be flipped
-        let l = SVGLine::new(
-            padding + (ax as u64),
-            padding + (flip(ay, my) as u64),
-            padding + (bx as u64),
-            padding + (flip(by, my) as u64),
+        buf.add_object(Box::new(SVGLine::new(
+            padding + flatten(ax, 0),
+            padding + flatten(ay, my as u64),
+            padding + flatten(bx, 0),
+            padding + flatten(by, my as u64),
 
+            // if a linedef is one-sided use differentiating colors and widths
             match linedef.is_one_sided() {
                 true => 7,
                 _    => 5,
             },
 
-            // if a linedef is one sided, it means it cannot be passed through
             match linedef.is_one_sided() {
                 true => Color::Black,
                 _    => Color::Grey,
             }
-        );
-
-        buf.add_object(Box::new(l));
+        )));
     }
     return buf;
 }

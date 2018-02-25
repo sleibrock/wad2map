@@ -1,6 +1,6 @@
 # wad2map - Maps for WADs
 
-`wad2map` is a Rust program written to create maps from Doom WAD files.
+`wad2map` is a [Rust](https://rust-lang.org/) program written to convert *[Doom](https://en.wikipedia.org/wiki/Doom_(1993_video_game))* maps into Scalable Vector Graphic files.
 
 
 ## Installation
@@ -11,7 +11,7 @@ git clone https://github.com/sleibrock/wad2map && cd wad2map
 cargo install
 ```
 
-You need to use Rust's Cargo tool, so make sure you install Rust with Rustup.
+You need to use Rust's Cargo tool, so make sure you install Rust with [Rustup](https://www.rustup.rs/).
 
 ## Instructions
 
@@ -19,14 +19,32 @@ You need to use Rust's Cargo tool, so make sure you install Rust with Rustup.
 
 If you wanted to generate all of Doom 1's maps into SVG format, simply call the following instruction:
 ```bash
-$ wad2map doom.wad
-$ ls doom.wad.maps
-E1M1.svg  E1M9.svg  E2M8.svg  E3M7.svg  E4M6.svg
-E1M2.svg  E2M1.svg  E2M9.svg  E3M8.svg  E4M7.svg
-E1M3.svg  E2M2.svg  E3M1.svg  E3M9.svg  E4M8.svg
-E1M4.svg  E2M3.svg  E3M2.svg  E4M1.svg  E4M9.svg
-E1M5.svg  E2M4.svg  E3M3.svg  E4M2.svg
-E1M6.svg  E2M5.svg  E3M4.svg  E4M3.svg
-E1M7.svg  E2M6.svg  E3M5.svg  E4M4.svg
-E1M8.svg  E2M7.svg  E3M6.svg  E4M5.svg
+wad2map doom.wad
 ```
+
+To run `wad2map` on a list of files, simply list each file sequentially.
+```bash
+wad2map doom.wad doom2.wad heretic.wad ...
+```
+
+### Converting SVGs to PNG
+
+`wad2map` exports all levels in Scalable Vector Graphics format to preserve quality when scaling the image upwards. In order to convert the SVG to something like Portable Network Graphics (PNG), you can use the standard Linux tool `convert` to convert a map to PNG format.
+
+```bash
+$ convert doom.wad.maps/E1M1.svg ./E1M1.png
+```
+
+Optionally you can use GIMP or Inkscape to also do similar things.
+
+
+### Tested IWADs
+
+* Doom: pass
+* Doom II: Hell on Earth: pass
+* Heretic: pass
+* Hexen: pass
+* Hexen: Deathkings of the Dark Citadel: pass
+* Strife: Pass
+* Chex Quest: fails (missing vertex issue possibly)
+
