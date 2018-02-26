@@ -15,7 +15,7 @@ You need to use Rust's Cargo tool, so make sure you install Rust with [Rustup](h
 
 ## Instructions
 
-`wad2map` accepts a path to a WAD file and will render all maps in the WAD into a new folder the same name as the WAD. `wad2map` also accepts multiple WADs at once for batch rendering. 
+`wad2map` accepts a path to a WAD file and will render all maps in the WAD into a new folder the same name as the WAD. `wad2map` also accepts multiple WADs at once for batch rendering.
 
 If you wanted to generate all of Doom 1's maps into SVG format, simply call the following instruction:
 ```bash
@@ -38,13 +38,17 @@ $ convert doom.wad.maps/E1M1.svg ./E1M1.png
 Optionally you can use GIMP or Inkscape to also do similar things.
 
 
-### Tested IWADs
+### Examples
 
-* Doom: pass
-* Doom II: Hell on Earth: pass
-* Heretic: pass
-* Hexen: pass
-* Hexen: Deathkings of the Dark Citadel: pass
-* Strife: Pass
-* Chex Quest: fails (missing vertex issue possibly)
+You can see examples in the [examples directory](https://github.com/sleibrock/wad2map/tree/master/examples) which contains different wads that I've tested (all IWADs, some PWADs).
+
+Doom's E1M1 "Hangar"
+![Doom E1M1](https://raw.githubusercontent.com/sleibrock/wad2map/master/examples/doom/E1M1.png)
+
+Doom II's MAP01 "Entryway"
+![Doom 2 MAP01](https://raw.githubusercontent.com/sleibrock/wad2map/master/examples/doom2/MAP01.png)
+
+Heretic's E1M1 "The Docks"
+![Heretic E1M1](https://raw.githubusercontent.com/sleibrock/wad2map/master/examples/heretic/E1M1.png)
+
 

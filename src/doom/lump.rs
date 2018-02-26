@@ -39,9 +39,9 @@ impl Lump {
         // is_level is checking if a name is (ExMx|MAPxx)
         let mut is_level_lump = false;
         if (dat[8]==69&&dat[10]==77)||(dat[8]==77&&dat[9]==65&&dat[10]==80) {
-            // check if the map name length is 5 characters max
+            // check if the map name length is 4 or 5 characters long
             // Wads can have a Lump called MAPINFO which will pass the initial check
-            if first_zero < 12 {
+            if first_zero == 11 || first_zero == 12 {
                 is_level_lump = true;
             }
         }

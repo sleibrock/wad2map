@@ -11,6 +11,13 @@ wads = [
   "hexdd.wad",
   "strife.wad",
   "chex3.wad",
+
+  # Non-core wads
+  "freedoom1.wad",
+  "freedoom2.wad",
+  "pirates.wad",
+  "scythe2.wad",
+  "aoddoom2.wad",
 ]
 
 # remove the examples directory entirely
