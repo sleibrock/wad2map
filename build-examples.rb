@@ -10,7 +10,7 @@ wads = [
   "hexen.wad",
   "hexdd.wad",
   "strife.wad",
-  #"chex3.wad", #disabled for now
+  "chex3.wad",
 ]
 
 # remove the examples directory entirely
