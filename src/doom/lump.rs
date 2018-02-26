@@ -37,8 +37,17 @@ impl Lump {
         }
 
         // is_level is checking if a name is (ExMx|MAPxx)
+        let mut is_level_lump = false;
+        if (dat[8]==69&&dat[10]==77)||(dat[8]==77&&dat[9]==65&&dat[10]==80) {
+            // check if the map name length is 5 characters max
+            // Wads can have a Lump called MAPINFO which will pass the initial check
+            if first_zero < 12 {
+                is_level_lump = true;
+            }
+        }
+
         Lump{
-            is_level: (dat[8]==69&&dat[10]==77)||(dat[8]==77&&dat[9]==65&&dat[10]==80),
+            is_level: is_level_lump,
             posn:     u8_to_usize(dat[0], dat[1], dat[2], dat[3]),
             size:     u8_to_usize(dat[4], dat[5], dat[6], dat[7]),
             name:     String::from_utf8_lossy(&dat[8..(first_zero+1)]).to_string(),
