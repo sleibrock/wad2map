@@ -1,6 +1,6 @@
 [package]
 name = "wad2map"
-version = "0.5.0"
+version = "1.0.0"
 authors = ["Steven Leibrock <steven.leibrock@gmail.com>"]
 
 [dependencies]
