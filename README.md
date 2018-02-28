@@ -54,10 +54,11 @@ Heretic's E1M1 "The Docks"
 
 ### Tested WADs
 
-Here is a list of all the wads that I've tested `wad2map` against. The list includes IWADs (id Software or otherwise created wads) and PWADs (player-made wads). In order to load PWADs like `aoddom2` or `scythe2`, you need the core `DOOM2.WAD` file, or you need to use the total replacement FreeDoom wad. Links are included to the store pages for purchasing the games.
+Here is a list of all the wads that I've tested `wad2map` against. The list includes IWADs (id Software or otherwise created wads) and PWADs (player-made wads). In order to load PWADs like `aoddoom2` or `scythe2`, you need the core `DOOM2.WAD` file, or you need to use the total replacement FreeDoom wad. Links are included to the store pages for purchasing the games.
 
 * [Doom](http://store.steampowered.com/app/2280/Ultimate_Doom/)
 * [Doom II: Hell on Earth](http://store.steampowered.com/app/2300/DOOM_II/?snr=1_7_7_151_150_)
+* [Final Doom (Plutonia and Evilution)](http://store.steampowered.com/app/2290/Final_DOOM/)
 * [Heretic: Shadow of the Serpent Riders](http://store.steampowered.com/app/2390/Heretic_Shadow_of_the_Serpent_Riders/)
 * [HeXen](http://store.steampowered.com/app/2360/HeXen_Beyond_Heretic/)
 * [HeXen: Deathkings of the Dark Citadel](http://store.steampowered.com/app/2370/HeXen_Deathkings_of_the_Dark_Citadel/)

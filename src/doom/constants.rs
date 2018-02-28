@@ -5,7 +5,8 @@
 /// across different struct definitions
 pub const  LUMP_WIDTH          : usize = 16;
 pub const  HEADER_WIDTH        : usize = 12;
-pub const  VERTEX_WIDTH        : usize = 4;
+pub const  VERTEX_WIDTH        : usize =  4;
+pub const  SECTOR_WIDTH        : usize = 26;
 pub const  DOOM_LINEDEF_WIDTH  : usize = 14;
 pub const  HEXEN_LINEDEF_WIDTH : usize = 16;
 

@@ -18,6 +18,7 @@ pub struct Level {
 
 impl Level {
     pub fn new(name: &String, vert_raw: &[u8], ld_raw: &[u8], is_hexen: bool) -> Level {
+        // create vectors of items we need to store
         let mut vertices : Vec<Vertex>  = Vec::new();
         let mut linedefs : Vec<LineDef> = Vec::new();
 

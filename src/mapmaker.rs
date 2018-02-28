@@ -4,6 +4,7 @@
 
 use std::fs::create_dir;
 use svg::*;
+use doom::linedef::*;
 use doom::level::*;
 use doom::wad::*;
 
@@ -37,6 +38,34 @@ pub fn flatten(v: u64, m: u64) -> u64 {
     }
     let d = m - v;
     return d;
+}
+
+
+// Given a line, determine it's color
+// Whether it's a key door, wall, or two-sided line
+pub fn line_color(line: &LineDef) -> Color {
+    // check if the first TYPE field is zero
+    // if it is, then check the HEXEN args list
+    // in HEXEN, type is 1-byte while normal is 2-bytes
+    let type_value = match line.stype {
+        0 => line.args[0] as u16,
+        _ => line.stype,
+    };
+    // Check the value against all key door values
+    match type_value {
+        28 => Color::Red,    // red keycard
+        33 => Color::Red,    // red keycard stay open
+        26 => Color::Blue,   // blue keycard
+        32 => Color::Blue,   // blue keycard stay open
+        27 => Color::Yellow, // yellow keycard
+        34 => Color::Yellow, // yellow keycard stay open
+
+        // else, check if it's a wall or not
+        _  => match line.is_one_sided() {
+            true => Color::Black,
+            _    => Color::Grey,
+        }
+    }
 }
 
 
@@ -122,10 +151,8 @@ pub fn level_to_svg(lev: &Level) -> SVG {
                 _    => 5,
             },
 
-            match linedef.is_one_sided() {
-                true => Color::Black,
-                _    => Color::Grey,
-            }
+            line_color(linedef),
+
         )));
     }
     return buf;

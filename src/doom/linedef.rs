@@ -54,6 +54,10 @@ impl LineDef {
         } 
     }
 
+    pub fn print(&self) {
+        println!("Linedef flag: {}", self.stype);
+    }
+
     pub fn is_one_sided(&self) -> bool {
         self.left == -1 || self.right == -1 
     }
