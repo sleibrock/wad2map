@@ -4,6 +4,7 @@
 
 use std::fs::create_dir;
 use svg::*;
+use optparse::Options;
 use doom::linedef::*;
 use doom::level::*;
 use doom::wad::*;
@@ -43,7 +44,15 @@ pub fn flatten(v: u64, m: u64) -> u64 {
 
 // Given a line, determine it's color
 // Whether it's a key door, wall, or two-sided line
-pub fn line_color(line: &LineDef) -> Color {
+pub fn line_color(line: &LineDef, color_doors: bool) -> Color {
+    // if coloring doors is false, just stick to default
+    if !color_doors {
+        return match line.is_one_sided() {
+            true => Color::Black,
+            _    => Color::Grey,
+        };
+    }
+
     // check if the first TYPE field is zero
     // if it is, then check the HEXEN args list
     // in HEXEN, type is 1-byte while normal is 2-bytes
@@ -71,7 +80,7 @@ pub fn line_color(line: &LineDef) -> Color {
 
 // convert a &Level into an SVG Buffer
 // calculates a lot of numbers and converts LineDefs into SVGLine objects
-pub fn level_to_svg(lev: &Level) -> SVG {
+pub fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
     // iterate through all vertices to find min/max bounds
     let mut min_x : i16 = 0;
     let mut min_y : i16 = 0;
@@ -128,7 +137,11 @@ pub fn level_to_svg(lev: &Level) -> SVG {
     }
 
     let mut buf = SVG::new(cx, cy, vx as u64, vy as u64);
-    buf.add_object(Box::new(SVGRect::new(0, 0, vx as u64, vy as u64, Color::White)));
+
+    // check if we want a transparent background
+    if !opts.transparent {
+        buf.add_object(Box::new(SVGRect::new(0, 0, vx as u64, vy as u64, Color::White)));
+    }
 
     for linedef in &lev.linedefs {
         let a = &lev.vertices[linedef.start as usize];
@@ -151,7 +164,7 @@ pub fn level_to_svg(lev: &Level) -> SVG {
                 _    => 5,
             },
 
-            line_color(linedef),
+            line_color(linedef, opts.color_doors),
 
         )));
     }
@@ -161,21 +174,25 @@ pub fn level_to_svg(lev: &Level) -> SVG {
 
 // Take a &Wad and start converting all it's levels to SVG buffers
 // Using said buffers, write each one to a corresponding file
-pub fn make_maps_from_wad(fname: &str, wad: &Wad) -> u8 {
+pub fn make_maps_from_wad(fname: &str, wad: &Wad, opts: &Options) -> u8 {
     let wad_dir_name = dir_name(fname);
     let dir_made = make_directory(&wad_dir_name);
-    if dir_made {
+    if dir_made  && opts.verbose {
         println!("Directory made!");
     }
 
     for lev in &wad.levels {
-        let mut svg_thing = level_to_svg(&lev);
+        let mut svg_thing = level_to_svg(&lev, opts);
         let output_path = make_path_str(&wad_dir_name, &lev.name);
 
         match svg_thing.to_file(&output_path) {
             Ok(_)  => {},
             Err(e) => { panic!(format!("Error: {}", e)); }
         }
+    }
+
+    if opts.verbose {
+        println!("Finished rendering maps for {}", fname);
     }
     return 0;
 } 

@@ -4,16 +4,17 @@ use std::fs::File;
 use std::io::Read;
 
 use utils::*;
+use optparse::Options;
 use doom::wad::{Wad, WadHeader};
 use doom::lump::Lump;
 use doom::constants::{HEADER_WIDTH, LUMP_WIDTH};
 
 // Parse a wad file into a Wad struct
-pub fn parse_wad(fname: &str) -> Result<Wad, &str> {
+pub fn parse_wad(fname: &str, opts: &Options) -> Result<Wad, String> {
     // open the file and read all the bytes into a local vector
     let mut f = match File::open(fname) {
         Ok(new_file) => new_file,
-        _            => { return Err("Could not open up file"); },
+        _            => { return Err(String::from("Could not open up file")); },
     };
     let mut all_bytes : Vec<u8> = Vec::new();
     match f.read_to_end(&mut all_bytes) {
@@ -21,20 +22,13 @@ pub fn parse_wad(fname: &str) -> Result<Wad, &str> {
         _     => panic!("")
     };
 
-    println!("Opened file {}", fname);
-    println!("Bytes read: {}", all_bytes.len());
-
     // craft a new WAD header struct with 12 bytes
     let header = WadHeader::new(&all_bytes[0..HEADER_WIDTH]);
-    header.print();
 
     let data      = &all_bytes[header.data_range()];
     let lump_data = &all_bytes[header.lump_range()];
 
     let mut is_hexen = false;
-
-    println!("Size of data pool: {}", data.len());
-    println!("Lump data size: {}", lump_data.len());
 
     // create a new vector of Lumps from the infotable
     let mut lumps : Vec<Lump> = Vec::new();
@@ -60,10 +54,17 @@ pub fn parse_wad(fname: &str) -> Result<Wad, &str> {
         offset += LUMP_WIDTH;
     }
 
+    if opts.verbose {
+        println!("Opened file {}", fname);
+        println!("Bytes read: {}", all_bytes.len());
+        header.print();
+        println!("Size of data pool: {}", data.len());
+        println!("Lump data size: {}", lump_data.len());
+        println!("Total lumps gathered: {}", lumps.len()); 
+    }
 
-    println!("Total lumps gathered: {}", lumps.len()); 
     if lumps.len() != header.numlumps {
-        return Err("Lump count does not match header");
+        return Err(String::from("Lump count does not match header"));
     }
 
     let wad = Wad::new(fname, header, &lumps, &data[..], is_hexen);
