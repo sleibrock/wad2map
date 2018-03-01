@@ -40,34 +40,45 @@ pub trait SVGObject {
 }
 
 pub struct SVG {
-    pub width:                   u64,
-    pub height:                  u64,
-    pub view_width:              u64,
-    pub view_height:             u64,
-    pub objects: Vec<Box<SVGObject>>,
+    pub width:                       u64,
+    pub height:                      u64,
+    pub view_width:                  u64,
+    pub view_height:                 u64,
+    pub objects:     Vec<Box<SVGObject>>,
 }
 
 pub struct SVGLine {
-    pub     x1:   u64,
-    pub     y1:   u64,
-    pub     x2:   u64,
-    pub     y2:   u64,
+    pub x1:       u64,
+    pub y1:       u64,
+    pub x2:       u64,
+    pub y2:       u64,
     pub stroke:   u64,
-    pub  color: Color,
+    pub color:  Color,
 }
 
 pub struct SVGRect {
-    pub    x:   u64,
-    pub    y:   u64,
-    pub    w:   u64,
-    pub    h:   u64,
+    pub x:      u64,
+    pub y:      u64,
+    pub w:      u64,
+    pub h:      u64,
     pub fill: Color,
 }
 
 pub struct SVGCircle {
-    pub     cx: u64,
-    pub     cy: u64,
+    pub cx:     u64,
+    pub cy:     u64,
     pub radius: u64,
+}
+
+pub struct SVGVertex {
+    pub x: u64,
+    pub y: u64,
+}
+
+pub struct SVGPoly {
+    pub color:             Color,
+    pub stroke:              u64,
+    pub vertices: Vec<SVGVertex>,
 }
 
 
@@ -125,6 +136,38 @@ impl SVGObject for SVGCircle {
 }
 
 
+impl SVGVertex {
+    pub fn new(x: u64, y: u64) -> SVGVertex {
+        SVGVertex{x: x, y: y}
+    }
+
+    pub fn to_string(&self) -> String {
+        format!("{},{}", self.x, self.y)
+    }
+}
+
+impl SVGPoly {
+    pub fn new(c: Color, stroke: u64) -> SVGPoly {
+        let v : Vec<SVGVertex> = Vec::new();
+        SVGPoly{
+            color: c,
+            stroke: stroke,
+            vertices: v,
+        }
+    }
+
+    pub fn addv(&mut self, x: u64, y: u64) {
+        self.vertices.push(SVGVertex::new(x,y));
+    }
+}
+
+impl SVGObject for SVGPoly {
+    fn to_string(&self) -> String {
+        String::from("not implemented")
+    }
+}
+
+
 // implementation for the SVG container
 // <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
 impl SVG {
@@ -132,11 +175,11 @@ impl SVG {
     // craft a new SVG and set the width and height at creation time
     pub fn new(w: u64, h: u64, vx: u64, vy: u64) -> SVG {
         return SVG{
-            width:            w,
-            height:           h,
-            view_width: vx,
-            view_height: vy,
-            objects: Vec::new(),
+            width:                w,
+            height:               h,
+            view_width:          vx,
+            view_height:         vy,
+            objects:     Vec::new(),
         }
     }
 

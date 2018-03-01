@@ -9,6 +9,7 @@ use doom::wad::{Wad, WadHeader};
 use doom::lump::Lump;
 use doom::constants::{HEADER_WIDTH, LUMP_WIDTH};
 
+
 // Parse a wad file into a Wad struct
 pub fn parse_wad(fname: &str, opts: &Options) -> Result<Wad, String> {
     // open the file and read all the bytes into a local vector

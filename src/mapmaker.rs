@@ -60,6 +60,7 @@ pub fn line_color(line: &LineDef, color_doors: bool) -> Color {
         0 => line.args[0] as u16,
         _ => line.stype,
     };
+
     // Check the value against all key door values
     match type_value {
         28 => Color::Red,    // red keycard
@@ -113,7 +114,6 @@ pub fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
     // padding from the edge of the image
     let padding : u64 = 50;
 
-
     // numbers that define the max X and Y ranges
     let mx = (max_x as i32) + shift_x;
     let my = (max_y as i32) + shift_y;
@@ -139,6 +139,7 @@ pub fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
     let mut buf = SVG::new(cx, cy, vx as u64, vy as u64);
 
     // check if we want a transparent background
+    // if not, add a white background matching the dimensions
     if !opts.transparent {
         buf.add_object(Box::new(SVGRect::new(0, 0, vx as u64, vy as u64, Color::White)));
     }
@@ -163,9 +164,7 @@ pub fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
                 true => 7,
                 _    => 5,
             },
-
             line_color(linedef, opts.color_doors),
-
         )));
     }
     return buf;
