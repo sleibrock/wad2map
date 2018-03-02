@@ -58,8 +58,19 @@ impl LineDef {
         println!("Linedef flag: {}", self.stype);
     }
 
+    // return if a linedef is "one-sided", meaning space behind it is void
+    // a linedef should have at least one side, so only one of these can be -1
     pub fn is_one_sided(&self) -> bool {
         self.left == -1 || self.right == -1 
+    }
+
+    // return the linedef's special type, which varies based on is_hexen
+    // if the stype field is empty, use the u8 from the args field
+    pub fn special_type(&self) -> u16 {
+        match self.stype {
+            0 => self.args[0] as u16,
+            x => x,
+        }
     }
 }
 

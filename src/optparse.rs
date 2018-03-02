@@ -17,6 +17,12 @@ exported to matching directories of the original WAD filepath
   -t, --transparent  Render images with no backgrounds
   -l, --lighting     Render images using sector lighting
   -d, --doors        Color all keycard/skullkey doors
+
+Examples:
+  wad2map doom.wad        Exports all levels into './doom.wad.maps'
+  wad2map -t heretic.wad  Exports all Heretic levels as transparent
+
+More help can be found at <https://github.com/sleibrock/wad2map>
 ";
 
 pub struct Options {
@@ -52,6 +58,7 @@ impl Options {
         let mut files_buf : Vec<String> = Vec::new();
 
         // loop through all args and match for values
+        // TODO: write differently to parse "--flag <value>" args
         for arg in arg_iter {
             match arg.as_str() {
                 "-h"            => { help = true; },

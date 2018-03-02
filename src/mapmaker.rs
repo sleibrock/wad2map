@@ -53,16 +53,8 @@ pub fn line_color(line: &LineDef, color_doors: bool) -> Color {
         };
     }
 
-    // check if the first TYPE field is zero
-    // if it is, then check the HEXEN args list
-    // in HEXEN, type is 1-byte while normal is 2-bytes
-    let type_value = match line.stype {
-        0 => line.args[0] as u16,
-        _ => line.stype,
-    };
-
     // Check the value against all key door values
-    match type_value {
+    match line.special_type() {
         28 => Color::Red,    // red keycard
         33 => Color::Red,    // red keycard stay open
         26 => Color::Blue,   // blue keycard
