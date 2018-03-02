@@ -19,6 +19,11 @@ fn main() {
         exit(0);
     }
 
+    if opts.version {
+        opts.print_version();
+        exit(0);
+    }
+
     if opts.files.len() == 0 {
         println!("No files supplied");
         exit(-1);

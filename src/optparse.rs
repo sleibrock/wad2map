@@ -5,8 +5,23 @@ use std::env::args;
 /// This is where command line options are parsed
 /// Turn the CLI options into a Struct for pass-through to various functions
 
+
+const HELP_STR : &'static str = "Usage: wad2map [OPTION] ... [FILE] ...
+Convert all levels from a list of WADs into SVG files
+exported to matching directories of the original WAD filepath
+
+
+  -h, --help         Show this help and exit
+  -v, --version      Show program version and exit
+  -V, --verbose      Toggle program verbosity
+  -t, --transparent  Render images with no backgrounds
+  -l, --lighting     Render images using sector lighting
+  -d, --doors        Color all keycard/skullkey doors
+";
+
 pub struct Options {
     pub help:               bool,
+    pub version:            bool,
     pub verbose:            bool,
     pub target_size:         u64,
     pub transparent:        bool,
@@ -29,6 +44,7 @@ impl Options {
 
         let mut help        = false;
         let mut verbose     = false;
+        let mut version     = false;
         let target_size     = 1024; // TODO: this thingy
         let mut transparent = false;
         let mut lighting    = false;
@@ -40,7 +56,9 @@ impl Options {
             match arg.as_str() {
                 "-h"            => { help = true; },
                 "--help"        => { help = true; },
-                "-v"            => { verbose = true; },
+                "-v"            => { version = true; },
+                "--version"     => { version = true; },
+                "-V"            => { verbose = true; },
                 "--verbose"     => { verbose = true; },
                 "-t"            => { transparent = true; },
                 "--transparent" => { transparent = true; },
@@ -54,6 +72,7 @@ impl Options {
 
         Ok(Options{
             help:               help,
+            version:         version,
             verbose:         verbose,
             target_size: target_size,
             transparent: transparent,
@@ -63,9 +82,16 @@ impl Options {
         })
     }
 
+    pub fn print_version(&self) {
+        println!("{} version {}",
+                env!("CARGO_PKG_NAME"),
+                env!("CARGO_PKG_VERSION"),
+        );
+    }
 
     // print a help command when ran with -h
     pub fn print_help(&self) {
+        println!("{}", HELP_STR);
     }
 }
 
