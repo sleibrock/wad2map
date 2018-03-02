@@ -24,27 +24,25 @@ impl Sector {
 
         // calculate the end of the strings so no NUL bytes are included
         let mut zero1 : usize = 11;
+        let mut zero2 : usize = 19;
         while dat[zero1] == 0 {
             zero1 -= 1;
         }
-
-        let mut zero2 : usize = 19;
         while dat[zero2] == 0 {
             zero2 -= 1;
         }
-
 
         println!("Making sector, len: {}", dat.len());
         println!("Floor: {}", String::from_utf8_lossy(&dat[4..(zero1+1)]).to_string());
         println!("Ceil: {}", String::from_utf8_lossy(&dat[12..(zero2+1)]).to_string());
         Sector{
-            floor: u8_to_u16(dat[0], dat[1]),
-            ceil: u8_to_u16(dat[2], dat[3]),
+            floor:     u8_to_u16(dat[0], dat[1]),
+            ceil:      u8_to_u16(dat[2], dat[3]),
             floor_tex: String::from_utf8_lossy(&dat[4..(zero1+1)]).to_string(),
-            ceil_tex: String::from_utf8_lossy(&dat[12..(zero2+1)]).to_string(),
-            light: u8_to_u16(dat[20], dat[21]),
-            stype: u8_to_u16(dat[2], dat[3]),
-            stag: u8_to_u16(dat[2], dat[3]),
+            ceil_tex:  String::from_utf8_lossy(&dat[12..(zero2+1)]).to_string(),
+            light:     u8_to_u16(dat[20], dat[21]),
+            stype:     u8_to_u16(dat[2], dat[3]),
+            stag:      u8_to_u16(dat[2], dat[3]),
         }
     }
 
