@@ -48,6 +48,8 @@ impl WadHeader {
         (self.lumpaddr ..)
     }
 
+    // use this to check when creating headers from files that the
+    // first 12 bytes are actually valid DOOM values (ie: type matches the WAD nums)
     pub fn is_wad(&self) -> bool {
         self.wadtype == IWAD_NUMBER || self.wadtype == PWAD_NUMBER
     }

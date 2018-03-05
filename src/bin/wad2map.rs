@@ -30,18 +30,34 @@ fn main() {
     }
 
     // loop through all arguments and parse a wad from each one
+    let mut passes : usize = 0;
+    let mut fails  : usize = 0;
     for file in &opts.files {
         let fname = format!("{}", file).to_owned();
-        
-        let wad = match parse_wad(&fname, &opts) {
-            Ok(new_wad) => Some(new_wad),
-            _ => None,
-        };
 
-        let _ = match wad {
-            Some(w) => make_maps_from_wad(&fname, &w, &opts),
-            _       => 2,
-        };
+        match parse_wad(&fname, &opts) {
+            Ok(new_wad) => {
+                match make_maps_from_wad(&fname, &new_wad, &opts) {
+                    Ok(_)  => { passes += 1; },
+                    Err(e) => {
+                        if opts.verbose {
+                            println!("make_maps_from_svg: {}", e);
+                        }
+                        fails  += 1;
+                    },
+                }
+            },
+            Err(e) => {
+                if opts.verbose {
+                    println!("parse_wad: {}", e);
+                }
+                fails += 1;
+            },
+        }
+    }
+
+    if opts.verbose {
+        println!("{} file(s) rendered, {} file(s) failed", passes, fails);
     }
 
     exit(0);

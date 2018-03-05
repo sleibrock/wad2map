@@ -1,12 +1,17 @@
 // sidedef.rs
 
+/// A SideDef contains information about LineDef textures and sectors
+/// It contains texture names as strings for the upper/middle/lower textures
+/// x and y offsets will also calculate how far to offset one texture when drawing
+/// The sector will say which sector the sidedef belongs to
+
 pub struct SideDef {
-    pub x_offset: i16,
-    pub y_offset: i16,
-    pub upper_tex: String,
-    pub lower_tex: String,
+    pub x_offset:      i16,
+    pub y_offset:      i16,
+    pub upper_tex:  String,
+    pub lower_tex:  String,
     pub middle_tex: String,
-    pub sector: u16,
+    pub sector:        u16,
 }
 
 

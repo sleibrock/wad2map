@@ -17,7 +17,7 @@ pub struct LineDef {
 
 /// A LineDef is a representation of a Line on a Doom level. Map objects such as
 /// SECTORS, NODES or SSECTORS will often reference LINEDEFs as room definitions
-/// The LineDef layout depends on whether it's a Hexen wad or not
+/// The LineDef size/width depends on whether it's a Hexen wad or not
 impl LineDef {
     pub fn new(is_hexen: bool, dat: &[u8]) -> LineDef {
         if is_hexen {

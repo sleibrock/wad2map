@@ -11,13 +11,13 @@ use doom::wad::*;
 
 
 // map a string (most likely a filepath for a wad) to a folder path string
-pub fn dir_name(dname: &str) -> String {
+fn dir_name(dname: &str) -> String {
     format!("{}.maps", dname)
 }
 
 
 // create a directory and return whether it was made or not
-pub fn make_directory(dname: &str) -> bool {
+fn make_directory(dname: &str) -> bool {
     match create_dir(format!("{}", dname)) {
         Ok(_) => true,
         _     => false,
@@ -26,14 +26,14 @@ pub fn make_directory(dname: &str) -> bool {
 
 
 // map a file name (level name) to an output file location string
-pub fn make_path_str(dir: &str, lname: &str) -> String {
+fn make_path_str(dir: &str, lname: &str) -> String {
     format!("{}/{}.svg", dir, lname)
 }
 
 
 // flip a value in a certain axis
 // if the axis is set to zero, just return the initial value
-pub fn flatten(v: u64, m: u64) -> u64 {
+fn flatten(v: u64, m: u64) -> u64 {
     if m == 0 {
         return v;
     }
@@ -44,7 +44,7 @@ pub fn flatten(v: u64, m: u64) -> u64 {
 
 // Given a line, determine it's color
 // Whether it's a key door, wall, or two-sided line
-pub fn line_color(line: &LineDef, color_doors: bool) -> Color {
+fn line_color(line: &LineDef, color_doors: bool) -> Color {
     // if coloring doors is false, just stick to default
     if !color_doors {
         return match line.is_one_sided() {
@@ -73,7 +73,7 @@ pub fn line_color(line: &LineDef, color_doors: bool) -> Color {
 
 // convert a &Level into an SVG Buffer
 // calculates a lot of numbers and converts LineDefs into SVGLine objects
-pub fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
+fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
     // iterate through all vertices to find min/max bounds
     let mut min_x : i16 = 0;
     let mut min_y : i16 = 0;
@@ -165,7 +165,7 @@ pub fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
 
 // Take a &Wad and start converting all it's levels to SVG buffers
 // Using said buffers, write each one to a corresponding file
-pub fn make_maps_from_wad(fname: &str, wad: &Wad, opts: &Options) -> u8 {
+pub fn make_maps_from_wad(fname: &str, wad: &Wad, opts: &Options) -> Result<u8, String> {
     let wad_dir_name = dir_name(fname);
     let dir_made = make_directory(&wad_dir_name);
     if dir_made  && opts.verbose {
@@ -178,14 +178,14 @@ pub fn make_maps_from_wad(fname: &str, wad: &Wad, opts: &Options) -> u8 {
 
         match svg_thing.to_file(&output_path) {
             Ok(_)  => {},
-            Err(e) => { panic!(format!("Error: {}", e)); }
+            Err(e) => { return Err(String::from(format!("Error: {}", e))); },
         }
     }
 
     if opts.verbose {
         println!("Finished rendering maps for {}", fname);
     }
-    return 0;
+    return Ok(0);
 } 
 
 

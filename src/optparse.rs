@@ -37,7 +37,6 @@ pub struct Options {
 }
 
 
-
 impl Options {
     // read args from std::env::args(), parse them
     pub fn new() -> Result<Options, String> {

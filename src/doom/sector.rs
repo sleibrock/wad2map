@@ -1,5 +1,10 @@
 // sector.rs
 
+/// A Sector is information regarding a particular zone
+/// It stores the ceiling and floor heights, ceiling and floor textures
+/// and stores a value called 'tag' such that any LineDefs matching that tag
+/// will be considered part of that 'sector'
+
 use utils::*;
 
 use doom::constants::SECTOR_WIDTH;

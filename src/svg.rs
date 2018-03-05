@@ -22,6 +22,7 @@ pub enum Color {
     Red, Blue, Green, Yellow, Black, White, Grey, None
 }
 
+// convert a Color enum to a SVG string
 pub fn color_to_string(c: &Color) -> String {
     return match *c {
         Color::Red    =>    "red".to_owned(),
@@ -35,6 +36,7 @@ pub fn color_to_string(c: &Color) -> String {
     }
 }
 
+// any SVG object we want to store in our SVG document should have a to_string() func
 pub trait SVGObject {
     fn to_string(&self) -> String;
 }
@@ -86,7 +88,7 @@ pub struct SVGPoly {
 
 impl SVGLine {
     pub fn new(x1: u64, y1: u64, x2: u64, y2: u64, w: u64, color: Color) -> SVGLine {
-        SVGLine{x1: x1, y1: y1, x2: x2, y2: y2, stroke: w, color: color,}
+        SVGLine{x1: x1, y1: y1, x2: x2, y2: y2, stroke: w, color: color}
     }
 }
 

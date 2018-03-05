@@ -1,5 +1,8 @@
 // parse_wad.rs
 
+/// This file has one function dedicated to parsing a file
+/// It accepts a file path string and will return a Result<Wad, String>
+
 use std::fs::File;
 use std::io::Read;
 
@@ -25,6 +28,10 @@ pub fn parse_wad(fname: &str, opts: &Options) -> Result<Wad, String> {
 
     // craft a new WAD header struct with 12 bytes
     let header = WadHeader::new(&all_bytes[0..HEADER_WIDTH]);
+
+    if !header.is_wad() {
+        return Err(String::from(format!("File '{}' is not a WAD", &fname)));
+    }
 
     let data      = &all_bytes[header.data_range()];
     let lump_data = &all_bytes[header.lump_range()];
