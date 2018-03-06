@@ -1,8 +1,9 @@
 // lump.rs
 
 use std::ops::Range;
-use utils::*;
+use utils::u8_to_u32;
 use doom::constants::{HEADER_WIDTH, LUMP_WIDTH};
+
 
 /// A Lump is a core piece of information in Doom Wads, it represents object
 /// range addresses. A Lump is 16 bytes in length. The first four bytes are
@@ -20,6 +21,7 @@ pub struct Lump {
     pub name:     String,
     pub is_level: bool,
 }
+
 
 impl Lump {
     pub fn new(dat: &[u8]) -> Lump {
@@ -44,8 +46,8 @@ impl Lump {
 
         Lump{
             is_level: is_level_lump,
-            posn:     u8_to_usize(dat[0], dat[1], dat[2], dat[3]),
-            size:     u8_to_usize(dat[4], dat[5], dat[6], dat[7]),
+            posn:     u8_to_u32(dat[0], dat[1], dat[2], dat[3]) as usize,
+            size:     u8_to_u32(dat[4], dat[5], dat[6], dat[7]) as usize,
             name:     String::from_utf8_lossy(&dat[8..(first_zero + 1)]).to_string(),
         }
     }

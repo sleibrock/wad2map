@@ -1,6 +1,6 @@
 // subsector.rs
 
-use utils::*;
+use utils::u8_to_u16;
 use doom::constants::SSECTOR_WIDTH;
 
 

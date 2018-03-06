@@ -1,10 +1,10 @@
 // seg.rs
 
-use utils::*;
+use utils::u8_to_u16;
 use doom::constants::SEG_WIDTH;
 
-pub struct Seg
-{
+
+pub struct Seg {
     pub start:     u16,
     pub end:       u16,
     pub angle:     u16,
@@ -14,10 +14,8 @@ pub struct Seg
 }
 
 
-impl Seg
-{
-    pub fn new(dat: &[u8]) -> Seg
-    {
+impl Seg {
+    pub fn new(dat: &[u8]) -> Seg {
         if dat.len() != SEG_WIDTH {
             panic!("Seg given {} bytes, needs {}", dat.len(), SEG_WIDTH);
         }

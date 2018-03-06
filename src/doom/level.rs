@@ -1,9 +1,10 @@
 // level.rs
 
-use utils::*;
+use utils::packet_range;
 use doom::linedef::*;
 use doom::vertex::*;
 use doom::constants::{DOOM_LINEDEF_WIDTH, HEXEN_LINEDEF_WIDTH, VERTEX_WIDTH};
+
 
 /// A Level is a collection of all types of Lump group categories into one piece.
 /// A Level here has two lists, a VERTEXES and LINEDEFS list.
@@ -13,6 +14,7 @@ pub struct Level {
     pub vertices: Vec<Vertex>,
     pub linedefs: Vec<LineDef>,
 }
+
 
 impl Level {
     pub fn new(name: &String, vert_raw: &[u8], ld_raw: &[u8], is_hexen: bool) -> Level {

@@ -6,8 +6,8 @@
 /// will be considered part of that 'sector'
 
 use utils::*;
-
 use doom::constants::SECTOR_WIDTH;
+
 
 pub struct Sector {
     pub ceil:      u16,
@@ -18,6 +18,7 @@ pub struct Sector {
     pub ceil_tex:  String,
     pub floor_tex: String,
 }
+
 
 impl Sector {
     pub fn new(dat: &[u8]) -> Sector {
