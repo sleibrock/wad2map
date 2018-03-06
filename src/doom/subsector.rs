@@ -7,8 +7,8 @@ use doom::constants::SSECTOR_WIDTH;
 /// A subsector is a 4-byte field containing Seg count
 /// and the address of the first Seg in the list of Segs
 pub struct Subsector {
+    pub addr:   usize,
     pub scount: usize,
-    pub addr: usize,
 }
 
 

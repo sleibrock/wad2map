@@ -2,8 +2,7 @@
 
 use std::ops::Range;
 use utils::*;
-use doom::constants::{LUMP_WIDTH, HEADER_WIDTH};
-
+use doom::constants::{HEADER_WIDTH, LUMP_WIDTH};
 
 /// A Lump is a core piece of information in Doom Wads, it represents object
 /// range addresses. A Lump is 16 bytes in length. The first four bytes are
@@ -16,12 +15,11 @@ use doom::constants::{LUMP_WIDTH, HEADER_WIDTH};
 /// Lumps can have a name "ExMx" or "MAPXX", telling us that a new Level is
 /// being fed in from the Lump stream
 pub struct Lump {
-    pub posn:      usize,
-    pub size:      usize,
-    pub is_level:   bool,
+    pub posn:     usize,
+    pub size:     usize,
     pub name:     String,
+    pub is_level: bool,
 }
-
 
 impl Lump {
     pub fn new(dat: &[u8]) -> Lump {
@@ -32,9 +30,7 @@ impl Lump {
         // strings shouldn't have null-bytes so we need to find the
         // offset where we should slice the string up to
         let mut first_zero : usize = 15;
-        while dat[first_zero] == 0 {
-            first_zero -= 1;
-        }
+        while dat[first_zero] == 0 { first_zero -= 1; }
 
         // is_level is checking if a name is (ExMx|MAPxx)
         let mut is_level_lump = false;
@@ -50,7 +46,7 @@ impl Lump {
             is_level: is_level_lump,
             posn:     u8_to_usize(dat[0], dat[1], dat[2], dat[3]),
             size:     u8_to_usize(dat[4], dat[5], dat[6], dat[7]),
-            name:     String::from_utf8_lossy(&dat[8..(first_zero+1)]).to_string(),
+            name:     String::from_utf8_lossy(&dat[8..(first_zero + 1)]).to_string(),
         }
     }
 
@@ -64,7 +60,7 @@ impl Lump {
     // the fact that the header was stripped from the data pool
     // so the header width should be subtracted from it
     pub fn range(&self) -> Range<usize> {
-        ((self.posn - HEADER_WIDTH) .. ((self.posn - HEADER_WIDTH) + self.size))
+        ((self.posn - HEADER_WIDTH)..((self.posn - HEADER_WIDTH) + self.size))
     }
 }
 

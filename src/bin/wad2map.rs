@@ -9,11 +9,16 @@ use wad2map::parse_wad::parse_wad;
 use wad2map::mapmaker::make_maps_from_wad;
 
 fn main() {
+    // generate an Options struct reading args from CLI
     let opts = match Options::new() {
         Ok(opt) => opt,
-        Err(ec) => { println!("{}", ec); exit(-2); },
+        Err(ec) => {
+            println!("{}", ec);
+            exit(-2);
+        }
     };
 
+    // do a bunch of checks and then exit with status codes
     if opts.help {
         opts.print_help();
         exit(0);
@@ -36,15 +41,13 @@ fn main() {
         let fname = format!("{}", file).to_owned();
 
         match parse_wad(&fname, &opts) {
-            Ok(new_wad) => {
-                match make_maps_from_wad(&fname, &new_wad, &opts) {
-                    Ok(_)  => { passes += 1; },
-                    Err(e) => {
-                        if opts.verbose {
-                            println!("make_maps_from_svg: {}", e);
-                        }
-                        fails  += 1;
-                    },
+            Ok(new_wad) => match make_maps_from_wad(&fname, &new_wad, &opts) {
+                Ok(_) => { passes += 1; },
+                Err(e) => {
+                    if opts.verbose {
+                        println!("make_maps_from_svg: {}", e);
+                    }
+                    fails += 1;
                 }
             },
             Err(e) => {
@@ -52,7 +55,7 @@ fn main() {
                     println!("parse_wad: {}", e);
                 }
                 fails += 1;
-            },
+            }
         }
     }
 

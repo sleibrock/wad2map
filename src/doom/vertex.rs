@@ -1,8 +1,7 @@
 // vertex.rs
 
 use utils::*;
-use doom::constants::{VERTEX_WIDTH};
-
+use doom::constants::VERTEX_WIDTH;
 
 /// A Vertex is a 4-byte slice of data representing a vertex in 2D space.
 /// Every other object in Doom files will reference a Vertex.
@@ -18,7 +17,7 @@ impl Vertex {
             panic!(format!("Vertex not given {} bytes", VERTEX_WIDTH));
         }
 
-        Vertex{
+        Vertex{ 
             x: u8_to_i16(dat[0], dat[1]),
             y: u8_to_i16(dat[2], dat[3]),
         }
