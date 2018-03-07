@@ -26,16 +26,19 @@ Examples:
 More help can be found at <https://github.com/sleibrock/wad2map>
 ";
 
+
 pub struct Options {
-    pub help: bool,
-    pub version: bool,
-    pub verbose: bool,
+    pub help:        bool,
+    pub files:       Vec<String>,
+    pub version:     bool,
+    pub verbose:     bool,
+    pub lighting:    bool,
+    pub inverted:    bool,
     pub target_size: u64,
     pub transparent: bool,
-    pub lighting: bool,
     pub color_doors: bool,
-    pub files: Vec<String>,
 }
+
 
 impl Options {
     // read args from std::env::args(), parse them
@@ -44,47 +47,88 @@ impl Options {
         arg_iter.next(); // push the binary path off
 
         if arg_iter.len() == 0 {
-            return Err(String::from("No args supplied"));
+            return Err(format!("No args supplied"));
         }
 
-        let mut help        = false;
-        let mut verbose     = false;
-        let mut version     = false;
-        let target_size     = 1024; // TODO: this thingy
-        let mut transparent = false;
-        let mut lighting    = false;
-        let mut color_doors = false;
+        // all toggle-able fields for the Options struct
+        let mut help          = false;
+        let mut verbose       = false;
+        let mut version       = false;
+        let mut t_size : u64  = 1024; // TODO: this thingy
+        let mut transparent   = false;
+        let mut lighting      = false;
+        let mut color_doors   = false;
+        let mut inverted      = false;
         let mut files_buf: Vec<String> = Vec::new();
 
-        // loop through all args and match for values
-        // TODO: write differently to parse "--flag <value>" args
-        for arg in arg_iter {
-            match arg.as_str() {
-                "-h"            => { help = true; },
-                "--help"        => { help = true; },
-                "-v"            => { version = true; },
-                "--version"     => { version = true; },
-                "-V"            => { verbose = true; },
-                "--verbose"     => { verbose = true; },
-                "-t"            => { transparent = true; },
-                "--transparent" => { transparent = true; },
-                "-l"            => { lighting = true; },
-                "--lighting"    => { lighting = true; },
-                "-d"            => { color_doors = true; },
-                "--doors"       => {color_doors = true; },
-                _               => { files_buf.push(arg.to_string()); },
+
+        // loop through all arguments and toggle options when detected
+        let length     : usize = arg_iter.len();
+        let mut index  : usize = 0;
+        while index < length {
+            // unpack the first argument into a local value
+            let v = match arg_iter.next() {
+                Some(arg) => arg,
+                None      => { return Err(format!("???")); },
+            };
+
+            match v.as_str() {
+                "-h"            => { help = true; }
+                "--help"        => { help = true; }
+                "-v"            => { version = true; }
+                "--version"     => { version = true; }
+                "-V"            => { verbose = true; }
+                "--verbose"     => { verbose = true; }
+                "-l"            => { lighting = true; }
+                "--lighting"    => { lighting = true; }
+                "-i"            => { inverted = true; }
+                "--invert"      => { inverted = true; }
+                "-d"            => { color_doors = true; }
+                "--doors"       => { color_doors = true; }
+                "-t"            => { transparent = true; }
+                "--transparent" => { transparent = true; }
+
+                // the next two options mirror eachother (no real way to work around this :s)
+                "-s"            => {
+                    let v2 = match arg_iter.next() {
+                        Some(arg) => arg,
+                        None      => { return Err(format!("No size arg supplied")); },
+                    };
+
+                    t_size = match v2.as_str().parse::<u64>() {
+                        Ok(i) => i,
+                        _     => { return Err(format!("Err: Couldn't parse '{}' to uint", v2)); }
+                    };
+                    index += 1;
+                }
+                "--size"        => {
+                    let v2 = match arg_iter.next() {
+                        Some(arg) => arg,
+                        None      => { return Err(format!("No size arg supplied")); },
+                    };
+                    
+                    t_size = match v2.as_str().parse::<u64>() {
+                        Ok(i) => i,
+                        _     => { return Err(format!("Err: Couldn't parse '{}' to uint", v2)); }
+                    };
+                    index += 1;
+                }
+                _               => { files_buf.push(v.to_string()); }
             }
+
+            index += 1;
         }
 
         Ok(Options {
-            help: help,
-            version: version,
-            verbose: verbose,
-            target_size: target_size,
+            help:        help,
+            files:       files_buf,
+            version:     version,
+            verbose:     verbose,
+            lighting:    lighting,
+            inverted:    inverted,
+            target_size: t_size,
             transparent: transparent,
-            lighting: lighting,
             color_doors: color_doors,
-            files: files_buf,
         })
     }
 
