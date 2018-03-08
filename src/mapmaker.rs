@@ -42,14 +42,17 @@ fn flatten(v: u64, m: u64) -> u64 {
 
 // Given a line, determine it's color
 // Whether it's a key door, wall, or two-sided line
-fn line_color(line: &LineDef, color_doors: bool) -> Color {
+fn line_color(line: &LineDef, color_doors: bool, inverted: bool) -> Color {
     let is_one_sided = line.is_one_sided();
     match color_doors {
         false => match is_one_sided {
-            true => Color::Black,
+            true => match inverted {
+                true => Color::White,
+                _    => Color::Black,
+            },
             _    => Color::Grey,
         },
-        _     => match line.special_type() {
+        _ => match line.special_type() {
             28 => Color::Red,    // red keycard
             33 => Color::Red,    // red keycard stay open
             26 => Color::Blue,   // blue keycard
@@ -58,7 +61,10 @@ fn line_color(line: &LineDef, color_doors: bool) -> Color {
             34 => Color::Yellow, // yellow keycard stay open
             _  => match is_one_sided {
                 // if it's not a key line, paint wall
-                true => Color::Black,
+                true => match inverted {
+                    true => Color::White,
+                    _    => Color::Black,
+                },
                 _    => Color::Grey,
             }
         }
@@ -108,7 +114,7 @@ fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
     let vy = my + (2 * padding as i32);
 
     // calculate the image canvas size by using the aspect ratio of the viewbox numbers
-    let base_canvas_size: f64 = 1024.0;
+    let base_canvas_size: f64 = opts.target_size as f64;
     let cx : u64;
     let cy : u64;
     if vx > vy {
@@ -131,7 +137,10 @@ fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
             0,
             vx as u64,
             vy as u64,
-            Color::White,
+            match opts.inverted {
+                true => Color::Black,
+                _    => Color::White,
+            }
         )));
     }
 
@@ -154,7 +163,8 @@ fn level_to_svg(lev: &Level, opts: &Options) -> SVG {
                 true => 7,
                 _ => 5,
             },
-            line_color(linedef, opts.color_doors),
+
+            line_color(linedef, opts.color_doors, opts.inverted)
         )));
     }
     return buf;
