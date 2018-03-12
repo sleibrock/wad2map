@@ -74,9 +74,15 @@ impl WadHeader {
 
 
 impl Wad {
-    pub fn new(n: &str, hd: WadHeader, lumps: &Vec<Lump>, dat: &[u8], is_h: bool) -> Wad {
+    pub fn new(
+        n: &str,
+        hd: WadHeader,
+        lumps: &Vec<Lump>,
+        dat: &[u8],
+        is_h: bool
+    ) -> Result<Wad, String> {
         if lumps.len() == 0 {
-            panic!("No lumps given to the Wad generation");
+            return Err(format!("No Lumps given to Wad::new()"));
         }
 
         let mut levels        : Vec<Level> = Vec::new();
@@ -85,6 +91,7 @@ impl Wad {
         let mut current_verts : &Lump      = &lumps[0];
         let mut current_lines : &Lump      = &lumps[0];
 
+        // account for BEHAVIORS lumps (we're not quite there yet)
         let data_count_target = match is_h {
             true  => 3,
             false => 3,
@@ -118,12 +125,12 @@ impl Wad {
             }
         }
 
-        Wad{
+        Ok(Wad{
             name:     String::from(n),
             header:   hd,
             levels:   levels,
             is_hexen: is_h,
-        }
+        })
     }
 
     pub fn print_info(&self) {

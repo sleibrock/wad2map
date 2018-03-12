@@ -73,8 +73,7 @@ pub fn parse_wad(fname: &str, opts: &Options) -> Result<Wad, String> {
         return Err(String::from("Lump count does not match header"));
     }
 
-    let wad = Wad::new(fname, header, &lumps, &data[..], is_hexen);
-    return Ok(wad);
+    return Wad::new(fname, header, &lumps, &data[..], is_hexen);
 }
 
 // end

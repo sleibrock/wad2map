@@ -1,15 +1,10 @@
 // svg.rs
 
-// The SVG struct holds shapes and can render to file
-//
-// Example file:
-// <?xml version="1.0" encoding="UTF-8" ?>
-// <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-// <rect x="25" y="25" width="200" height="200" fill="lime" stroke-width="4" stroke="pink" />
-// <circle cx="125" cy="125" r="75" fill="orange" />
-// <polyline points="50,150 50,200 200,200 200,100" stroke="red" stroke-width="4" fill="none" />
-// <line x1="50" y1="50" x2="200" y2="200" stroke="blue" stroke-width="4" />
-// </svg>
+/// SVG API for creating SVG documents
+/// The main component is the SVG struct which holds objects
+/// an object must implement the trait 'SVGObject' by which it
+/// should have a 'to_string()' method to convert it to it's XML
+/// representation in String format.
 
 use std::fs::File;
 use std::io::Write;
@@ -22,7 +17,7 @@ pub enum Color {
 
 // convert a Color enum to a SVG string
 pub fn color_to_string(c: &Color) -> String {
-    return match *c {
+    match *c {
         Color::Red    => "red".to_owned(),
         Color::None   => "none".to_owned(),
         Color::Blue   => "blue".to_owned(),
@@ -31,7 +26,7 @@ pub fn color_to_string(c: &Color) -> String {
         Color::Black  => "black".to_owned(),
         Color::White  => "white".to_owned(),
         Color::Yellow => "yellow".to_owned(),
-    };
+    }
 }
 
 // any SVG object we want to store in our SVG document should have a to_string() func
@@ -84,7 +79,10 @@ pub struct SVGPoly {
 // implementations
 
 impl SVGLine {
-    pub fn new(x1: u64, y1: u64, x2: u64, y2: u64, w: u64, color: Color) -> SVGLine {
+    pub fn new(
+        x1: u64, y1: u64, x2: u64,
+        y2: u64, w: u64, color: Color
+    ) -> SVGLine {
         SVGLine{x1: x1, y1: y1, x2: x2, y2: y2, stroke: w, color: color}
     }
 }
@@ -107,6 +105,7 @@ impl SVGRect {
     }
 }
 
+
 impl SVGObject for SVGRect {
     fn to_string(&self) -> String {
         format!(
@@ -117,12 +116,14 @@ impl SVGObject for SVGRect {
     }
 }
 
+
 // <circle cx="125" cy="125" r="75" fill="orange" />
 impl SVGCircle {
     pub fn new(cx: u64, cy: u64, r: u64) -> SVGCircle {
         SVGCircle{cx: cx, cy: cy, radius: r}
     }
 }
+
 
 impl SVGObject for SVGCircle {
     fn to_string(&self) -> String {
@@ -133,6 +134,7 @@ impl SVGObject for SVGCircle {
     }
 }
 
+
 impl SVGVertex {
     pub fn new(x: u64, y: u64) -> SVGVertex {
         SVGVertex { x: x, y: y }
@@ -142,6 +144,7 @@ impl SVGVertex {
         format!("{},{}", self.x, self.y)
     }
 }
+
 
 impl SVGPoly {
     pub fn new(c: Color, stroke: u64) -> SVGPoly {
@@ -181,7 +184,7 @@ impl SVG {
     }
 
     // convert an SVG object to file format
-    pub fn to_file(&mut self, fname: &str) -> Result<u8, &str> {
+    pub fn to_file(&mut self, fname: &str) -> Result<u8, String> {
         let head = format!(
             "<svg width=\"{}\" height=\"{}\" viewBox=\"0 0 {} {}\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">",
             self.width, self.height, self.view_width, self.view_height,
@@ -198,16 +201,23 @@ impl SVG {
         // open the file for writing
         let mut f = match File::create(fname) {
             Ok(new_file) => new_file,
-            Err(why) => panic!("Couldn't create '{:?}': {}", fname, why.description()),
+            Err(why) => {
+                return Err(format!(
+                    "Couldn't create '{:?}': {}", fname, why.description()
+                ));
+            }
         };
 
         for stringthing in buf {
             match f.write(stringthing.as_ref()) {
                 Ok(_) => {}
-                _ => panic!("Failed to write bytes"),
+                _ => {
+                    return Err(format!("Failed to write bytes to file"));
+                }
             };
         }
-        return Ok(0);
+
+        Ok(0)
     }
 }
 
